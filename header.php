@@ -1,10 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 7 | IE 8]>
-<html class="no-js ie" lang="en">
-<![endif]-->
-<!--[if !(IE 7) | !(IE 8)  ]><!-->
 <html class="no-js" lang="en">
-<!--<![endif]-->
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
