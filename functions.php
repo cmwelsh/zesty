@@ -77,9 +77,6 @@ add_action( 'after_setup_theme', 'twentytwelve_setup' );
 // Custom Header Image
 require( get_template_directory() . '/inc/custom-header.php' );
 
-// Custom Stylesheet Directory
-require get_template_directory() . '/inc/stylesheet-uri.php';
-
 // Facebook Open Graph
 require get_template_directory() . '/inc/facebook-open-graph.php';
 
@@ -138,13 +135,12 @@ function twentytwelve_scripts_styles() {
 			'family' => 'Open+Sans:400italic,700italic,400,700',
 			'subset' => $subsets,
 		);
-		//wp_enqueue_style( 'twentytwelve-fonts', add_query_arg( $query_args, "$protocol://fonts.googleapis.com/css" ), array(), null );
 	}
 
 	/*
 	 * Loads our main stylesheet.
 	 */
-	wp_enqueue_style( 'twentytwelve-style', get_stylesheet_uri() );
+	wp_enqueue_style('wp-parent-style', get_stylesheet_directory_uri() . '/assets/styles/style.css');
 }
 add_action( 'wp_enqueue_scripts', 'twentytwelve_scripts_styles' );
 
