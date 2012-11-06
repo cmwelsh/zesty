@@ -83,6 +83,9 @@ require get_template_directory() . '/inc/facebook-open-graph.php';
 // Remove Meta Tags
 require get_template_directory() . '/inc/remove-meta-tags.php';
 
+// New Page Menu Order
+require locate_template('/inc/new-page-menu-order.php');
+
 /**
  * Enqueues scripts and styles for front-end.
  *
