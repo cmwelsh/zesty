@@ -451,4 +451,8 @@ class Zesty {
 		$script_url = "{$stylesheet_directory_url} /assets/scripts/{$path}.js";
 		wp_enqueue_script($slug, $script_url);
 	}
+
+	public static function load_snippet($slug) {
+		do_action('zesty_load_snippet', $slug);
+	}
 }
