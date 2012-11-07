@@ -74,6 +74,9 @@ function twentytwelve_setup() {
 }
 add_action( 'after_setup_theme', 'twentytwelve_setup' );
 
+// Snippet loader
+require locate_template('inc/snippet-loader.php');
+
 // Custom Header Image
 require( get_template_directory() . '/inc/custom-header.php' );
 
@@ -84,7 +87,7 @@ require get_template_directory() . '/inc/facebook-open-graph.php';
 require get_template_directory() . '/inc/remove-meta-tags.php';
 
 // New Page Menu Order
-require locate_template('/inc/new-page-menu-order.php');
+require locate_template('inc/new-page-menu-order.php');
 
 /**
  * Enqueues scripts and styles for front-end.
@@ -440,3 +443,12 @@ function twentytwelve_customize_preview_js() {
 	wp_enqueue_script( 'twentytwelve-customizer', get_template_directory_uri() . '/js/theme-customizer.js', array( 'customize-preview' ), '20120827', true );
 }
 add_action( 'customize_preview_init', 'twentytwelve_customize_preview_js' );
+
+
+class Zesty {
+	public static function enqueue_script($slug, $path) {
+		$stylesheet_directory_url = get_stylesheet_directory_uri();
+		$script_url = "{$stylesheet_directory_url} /assets/scripts/{$path}.js";
+		wp_enqueue_script($slug, $script_url);
+	}
+}
