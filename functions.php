@@ -1,17 +1,10 @@
 <?php
 
 function zesty_base_init() {
-	// Custom Header Image
-	require( get_template_directory() . '/inc/custom-header.php' );
-
-	// Facebook Open Graph
-	require get_template_directory() . '/inc/facebook-open-graph.php';
-
-	// Remove Meta Tags
-	require get_template_directory() . '/inc/remove-meta-tags.php';
-
-	// New Page Menu Order
-	require locate_template('inc/new-page-menu-order.php');
+	Zesty::load_snippet('custom-header');
+	Zesty::load_snippet('facebook-open-graph');
+	Zesty::load_snippet('remove-meta-tags');
+	Zesty::load_snippet('new-page-menu-order');
 }
 add_action('after_setup_theme', 'zesty_base_init');
 

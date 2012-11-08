@@ -1,4 +1,5 @@
 <?php
+namespace Snippet;
 
 // Remove Meta Tags
 
@@ -27,5 +28,3 @@ class Remove_Meta_Tags {
     remove_action('wp_head', 'wp_generator');
   }
 }
-
-new Remove_Meta_Tags();

@@ -1,4 +1,5 @@
 <?php
+namespace Snippet;
 
 // Automatically add menu_order when post is created
 
@@ -21,5 +22,3 @@ class New_Page_Menu_Order {
     return $data;
   }
 }
-
-new New_Page_Menu_Order();

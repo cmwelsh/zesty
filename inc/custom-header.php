@@ -1,4 +1,6 @@
 <?php
+namespace Snippet;
+
 /**
  * Implements an optional custom header for Twenty Twelve.
  * See http://codex.wordpress.org/Custom_Headers
@@ -148,3 +150,9 @@ function twentytwelve_admin_header_image() {
 		<?php endif; ?>
 	</div>
 <?php }
+
+// below is boilerplate to conform to snippet API
+
+class Custom_Header {
+
+}

@@ -1,4 +1,5 @@
 <?php
+namespace Snippet;
 
 // Facebook Open Graph
 
@@ -13,5 +14,3 @@ class Facebook_Open_Graph {
     get_template_part('page-templates/partials/facebook-open-graph');
   }
 }
-
-new Facebook_Open_Graph();
