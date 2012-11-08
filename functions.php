@@ -1,4 +1,41 @@
 <?php
+
+function zesty_base_init() {
+	// Custom Header Image
+	require( get_template_directory() . '/inc/custom-header.php' );
+
+	// Facebook Open Graph
+	require get_template_directory() . '/inc/facebook-open-graph.php';
+
+	// Remove Meta Tags
+	require get_template_directory() . '/inc/remove-meta-tags.php';
+
+	// New Page Menu Order
+	require locate_template('inc/new-page-menu-order.php');
+}
+add_action('after_setup_theme', 'zesty_base_init');
+
+class Zesty {
+	public static function enqueue_script($slug, $path) {
+		$stylesheet_directory_url = get_stylesheet_directory_uri();
+		$script_url = "{$stylesheet_directory_url} /assets/scripts/{$path}.js";
+		wp_enqueue_script($slug, $script_url);
+	}
+
+	public static function load_snippet($snippet) {
+		// Check if file exists
+        $snippet_file = locate_template("inc/{$snippet}.php");
+        if (!file_exists($snippet_file)) {
+            throw new Exception("Snippet file not found: inc/{$snippet}.php");
+        }
+        // Load file
+        require $snippet_file;
+        // Instantiate instance of class
+        $snippet_class = 'Snippet\\' . str_replace(' ', '_', ucwords(str_replace('-', ' ', $snippet)));
+        $snippets[$snippet] = new $snippet_class;
+	}
+}
+
 /**
  * Twenty Twelve functions and definitions.
  *
@@ -74,20 +111,8 @@ function twentytwelve_setup() {
 }
 add_action( 'after_setup_theme', 'twentytwelve_setup' );
 
-// Snippet loader
-require locate_template('inc/snippet-loader.php');
 
-// Custom Header Image
-require( get_template_directory() . '/inc/custom-header.php' );
 
-// Facebook Open Graph
-require get_template_directory() . '/inc/facebook-open-graph.php';
-
-// Remove Meta Tags
-require get_template_directory() . '/inc/remove-meta-tags.php';
-
-// New Page Menu Order
-require locate_template('inc/new-page-menu-order.php');
 
 /**
  * Enqueues scripts and styles for front-end.
@@ -445,14 +470,3 @@ function twentytwelve_customize_preview_js() {
 add_action( 'customize_preview_init', 'twentytwelve_customize_preview_js' );
 
 
-class Zesty {
-	public static function enqueue_script($slug, $path) {
-		$stylesheet_directory_url = get_stylesheet_directory_uri();
-		$script_url = "{$stylesheet_directory_url} /assets/scripts/{$path}.js";
-		wp_enqueue_script($slug, $script_url);
-	}
-
-	public static function load_snippet($slug) {
-		do_action('zesty_load_snippet', $slug);
-	}
-}
