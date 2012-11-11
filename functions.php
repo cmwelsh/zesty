@@ -1,6 +1,7 @@
 <?php
 
 function zesty_base_init() {
+	// Load built-in parent snippets
 	Zesty::load_snippet('custom-header');
 	Zesty::load_snippet('facebook-open-graph');
 	Zesty::load_snippet('remove-meta-tags');
@@ -84,9 +85,6 @@ function twentytwelve_setup() {
 	// This theme styles the visual editor with editor-style.css to match the theme style.
 	add_editor_style();
 
-	// Adds RSS feed links to <head> for posts and comments.
-	add_theme_support( 'automatic-feed-links' );
-
 	// This theme supports a variety of post formats.
 	//add_theme_support( 'post-formats', array( 'aside', 'image', 'link', 'quote', 'status' ) );
 
@@ -97,10 +95,6 @@ function twentytwelve_setup() {
 	add_theme_support( 'custom-background', array(
 		'default-color' => 'e6e6e6',
 	) );
-
-	// This theme uses a custom image size for featured images, displayed on "standard" posts.
-	add_theme_support( 'post-thumbnails' );
-	set_post_thumbnail_size( 624, 9999 ); // Unlimited height, soft crop
 }
 add_action( 'after_setup_theme', 'twentytwelve_setup' );
 
