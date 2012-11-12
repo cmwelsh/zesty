@@ -10,23 +10,27 @@ function zesty_base_init() {
 add_action('after_setup_theme', 'zesty_base_init');
 
 class Zesty {
+	protected static $snippets = array();
+
 	public static function enqueue_script($slug, $path) {
 		$stylesheet_directory_url = get_stylesheet_directory_uri();
 		$script_url = "{$stylesheet_directory_url} /assets/scripts/{$path}.js";
 		wp_enqueue_script($slug, $script_url);
 	}
-
-	public static function load_snippet($snippet) {
+	public static function load_snippet($slug) {
 		// Check if file exists
-        $snippet_file = locate_template("inc/{$snippet}.php");
+        $snippet_file = locate_template("inc/{$slug}.php");
         if (!file_exists($snippet_file)) {
-            throw new Exception("Snippet file not found: inc/{$snippet}.php");
+            throw new Exception("Snippet file not found: inc/{$slug}.php");
         }
         // Load file
         require $snippet_file;
         // Instantiate instance of class
-        $snippet_class = 'Snippet\\' . str_replace(' ', '_', ucwords(str_replace('-', ' ', $snippet)));
-        $snippets[$snippet] = new $snippet_class;
+        $snippet_class = 'Snippet\\' . str_replace(' ', '_', ucwords(str_replace('-', ' ', $slug)));
+        self::$snippets[$slug] = new $snippet_class;
+	}
+	public static function snippet($slug) {
+		return self::$snippets[$slug];
 	}
 }
 
