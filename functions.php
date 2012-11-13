@@ -6,6 +6,7 @@ function zesty_base_init() {
 	Zesty::load_snippet('facebook-open-graph');
 	Zesty::load_snippet('remove-meta-tags');
 	Zesty::load_snippet('new-page-menu-order');
+	Zesty::load_snippet('favicon');
 }
 add_action('after_setup_theme', 'zesty_base_init');
 
