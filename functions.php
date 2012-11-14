@@ -1,5 +1,10 @@
 <?php
 
+// ACF Plugin: Categories Field
+if (function_exists('register_field')) { 
+    register_field('Categories_field', dirname(__File__) . '/inc/categories.php'); 
+}
+
 function zesty_base_init() {
 	// Load built-in parent snippets
 	Zesty::load_snippet('custom-header');
