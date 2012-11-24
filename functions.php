@@ -2,7 +2,7 @@
 
 // ACF Plugin: Categories Field
 if (function_exists('register_field')) { 
-    register_field('Categories_field', dirname(__File__) . '/inc/categories.php'); 
+    register_field('Categories_field', locate_template('/includes/categories.php')); 
 }
 
 function zesty_base_init() {
@@ -12,62 +12,15 @@ function zesty_base_init() {
 	Zesty::load_snippet('remove-meta-tags');
 	Zesty::load_snippet('favicon');
 	Zesty::load_snippet('remove-menu-items');
+	Zesty::load_snippet('nav-menu-fallback');
+	Zesty::load_snippet('content-width');
+	Zesty::load_snippet('styles');
 }
 add_action('after_setup_theme', 'zesty_base_init');
 
-class Zesty {
-	protected static $snippets = array();
+require locate_template('includes/zesty.php');
 
-	public static function enqueue_script($slug, $path) {
-		$stylesheet_directory_url = get_stylesheet_directory_uri();
-		$script_url = "{$stylesheet_directory_url} /assets/scripts/{$path}.js";
-		wp_enqueue_script($slug, $script_url);
-	}
-	public static function load_snippet($slug) {
-		// Check if file exists
-        $snippet_file = locate_template("inc/{$slug}.php");
-        if (!file_exists($snippet_file)) {
-            throw new Exception("Snippet file not found: inc/{$slug}.php");
-        }
-        // Load file
-        require $snippet_file;
-        // Instantiate instance of class
-        $snippet_class = 'Snippet\\' . str_replace(' ', '_', ucwords(str_replace('-', ' ', $slug)));
-        self::$snippets[$slug] = new $snippet_class;
-	}
-	public static function snippet($slug) {
-		return self::$snippets[$slug];
-	}
-}
 
-/**
- * Twenty Twelve functions and definitions.
- *
- * Sets up the theme and provides some helper functions, which are used
- * in the theme as custom template tags. Others are attached to action and
- * filter hooks in WordPress to change core functionality.
- *
- * When using a child theme (see http://codex.wordpress.org/Theme_Development and
- * http://codex.wordpress.org/Child_Themes), you can override certain functions
- * (those wrapped in a function_exists() call) by defining them first in your child theme's
- * functions.php file. The child theme's functions.php file is included before the parent
- * theme's file, so the child theme functions would be used.
- *
- * Functions that are not pluggable (not wrapped in function_exists()) are instead attached
- * to a filter or action hook.
- *
- * For more information on hooks, actions, and filters, see http://codex.wordpress.org/Plugin_API.
- *
- * @package WordPress
- * @subpackage Twenty_Twelve
- * @since Twenty Twelve 1.0
- */
-
-/**
- * Sets up the content width value based on the theme's design and stylesheet.
- */
-if ( ! isset( $content_width ) )
-	$content_width = 625;
 
 /**
  * Sets up theme defaults and registers the various WordPress features that
@@ -102,9 +55,9 @@ function twentytwelve_setup() {
 	 * This theme supports custom background color and image, and here
 	 * we also set up the default background color.
 	 */
-	add_theme_support( 'custom-background', array(
-		'default-color' => 'e6e6e6',
-	) );
+	//add_theme_support( 'custom-background', array(
+	//	'default-color' => 'e6e6e6',
+	//) );
 }
 add_action( 'after_setup_theme', 'twentytwelve_setup' );
 
@@ -121,56 +74,11 @@ function twentytwelve_scripts_styles() {
 	 * Adds JavaScript to pages with the comment form to support
 	 * sites with threaded comments (when in use).
 	 */
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) )
-		//wp_enqueue_script( 'comment-reply' );
-
-	/*
-	 * Adds JavaScript for handling the navigation menu hide-and-show behavior.
-	 */
-	//wp_enqueue_script( 'twentytwelve-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '1.0', true );
-
-	/*
-	 * Loads our special font CSS file.
-	 *
-	 * The use of Open Sans by default is localized. For languages that use
-	 * characters not supported by the font, the font can be disabled.
-	 *
-	 * To disable in a child theme, use wp_dequeue_style()
-	 * function mytheme_dequeue_fonts() {
-	 *     wp_dequeue_style( 'twentytwelve-fonts' );
-	 * }
-	 * add_action( 'wp_enqueue_scripts', 'mytheme_dequeue_fonts', 11 );
-	 */
-
-	/* translators: If there are characters in your language that are not supported
-	   by Open Sans, translate this to 'off'. Do not translate into your own language. */
-	if ( 'off' !== _x( 'on', 'Open Sans font: on or off', 'twentytwelve' ) ) {
-		$subsets = 'latin,latin-ext';
-
-		/* translators: To add an additional Open Sans character subset specific to your language, translate
-		   this to 'greek', 'cyrillic' or 'vietnamese'. Do not translate into your own language. */
-		$subset = _x( 'no-subset', 'Open Sans font: add new subset (greek, cyrillic, vietnamese)', 'twentytwelve' );
-
-		if ( 'cyrillic' == $subset )
-			$subsets .= ',cyrillic,cyrillic-ext';
-		elseif ( 'greek' == $subset )
-			$subsets .= ',greek,greek-ext';
-		elseif ( 'vietnamese' == $subset )
-			$subsets .= ',vietnamese';
-
-		$protocol = is_ssl() ? 'https' : 'http';
-		$query_args = array(
-			'family' => 'Open+Sans:400italic,700italic,400,700',
-			'subset' => $subsets,
-		);
+	if (is_singular() and comments_open() and get_option('thread_comments')) {
+		wp_enqueue_script('comment-reply');
 	}
-
-	/*
-	 * Loads our main stylesheet.
-	 */
-	wp_enqueue_style('wp-parent-style', get_stylesheet_directory_uri() . '/assets/styles/style.css');
 }
-add_action( 'wp_enqueue_scripts', 'twentytwelve_scripts_styles' );
+add_action('wp_enqueue_scripts', 'twentytwelve_scripts_styles');
 
 /**
  * Creates a nicely formatted and more specific title element text
@@ -204,17 +112,6 @@ function twentytwelve_wp_title( $title, $sep ) {
 }
 add_filter( 'wp_title', 'twentytwelve_wp_title', 10, 2 );
 
-/**
- * Makes our wp_nav_menu() fallback -- wp_page_menu() -- show a home link.
- *
- * @since Twenty Twelve 1.0
- */
-function twentytwelve_page_menu_args( $args ) {
-	$args['show_home'] = true;
-	return $args;
-}
-add_filter( 'wp_page_menu_args', 'twentytwelve_page_menu_args' );
-
 if ( ! function_exists( 'twentytwelve_content_nav' ) ) :
 /**
  * Displays navigation to next/previous pages when applicable.
@@ -234,6 +131,23 @@ function twentytwelve_content_nav( $nav_id ) {
 }
 endif;
 
+// Custom comment display callback
+function zesty_comment($comment, $args, $depth) {
+    $GLOBALS['comment'] = $comment;
+    switch ($comment->comment_type) {
+        case 'pingback':
+        case 'trackback':
+            // Don't display pingbacks
+            break;
+        default:
+            // Proceed with normal comments.
+            require locate_template('partial-comment.php');
+            break;
+    }
+}
+
+
+// dont use this, use the one above. need to clean this up.
 if ( ! function_exists( 'twentytwelve_comment' ) ) :
 /**
  * Template for comments and pingbacks.
@@ -344,88 +258,3 @@ function twentytwelve_entry_meta() {
 	);
 }
 endif;
-
-/**
- * Extends the default WordPress body class to denote:
- * 1. Using a full-width layout, when no active widgets in the sidebar
- *    or full-width template.
- * 2. Front Page template: thumbnail in use and number of sidebars for
- *    widget areas.
- * 3. White or empty background color to change the layout and spacing.
- * 4. Custom fonts enabled.
- * 5. Single or multiple authors.
- *
- * @since Twenty Twelve 1.0
- *
- * @param array Existing class values.
- * @return array Filtered class values.
- */
-function twentytwelve_body_class( $classes ) {
-	$background_color = get_background_color();
-
-	if ( ! is_active_sidebar( 'sidebar-1' ) || is_page_template( 'page-templates/full-width.php' ) )
-		$classes[] = 'full-width';
-
-	if ( is_page_template( 'page-templates/front-page.php' ) ) {
-		$classes[] = 'template-front-page';
-		if ( has_post_thumbnail() )
-			$classes[] = 'has-post-thumbnail';
-		if ( is_active_sidebar( 'sidebar-2' ) && is_active_sidebar( 'sidebar-3' ) )
-			$classes[] = 'two-sidebars';
-	}
-
-	if ( empty( $background_color ) )
-		$classes[] = 'custom-background-empty';
-	elseif ( in_array( $background_color, array( 'fff', 'ffffff' ) ) )
-		$classes[] = 'custom-background-white';
-
-	// Enable custom font class only if the font CSS is queued to load.
-	if ( wp_style_is( 'twentytwelve-fonts', 'queue' ) )
-		$classes[] = 'custom-font-enabled';
-
-	if ( ! is_multi_author() )
-		$classes[] = 'single-author';
-
-	return $classes;
-}
-add_filter( 'body_class', 'twentytwelve_body_class' );
-
-/**
- * Adjusts content_width value for full-width and single image attachment
- * templates, and when there are no active widgets in the sidebar.
- *
- * @since Twenty Twelve 1.0
- */
-function twentytwelve_content_width() {
-	if ( is_page_template( 'page-templates/full-width.php' ) || is_attachment() || ! is_active_sidebar( 'sidebar-1' ) ) {
-		global $content_width;
-		$content_width = 960;
-	}
-}
-add_action( 'template_redirect', 'twentytwelve_content_width' );
-
-/**
- * Add postMessage support for site title and description for the Theme Customizer.
- *
- * @since Twenty Twelve 1.0
- *
- * @param WP_Customize_Manager $wp_customize Theme Customizer object.
- * @return void
- */
-function twentytwelve_customize_register( $wp_customize ) {
-	$wp_customize->get_setting( 'blogname' )->transport = 'postMessage';
-	$wp_customize->get_setting( 'blogdescription' )->transport = 'postMessage';
-}
-add_action( 'customize_register', 'twentytwelve_customize_register' );
-
-/**
- * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
- *
- * @since Twenty Twelve 1.0
- */
-function twentytwelve_customize_preview_js() {
-	wp_enqueue_script( 'twentytwelve-customizer', get_template_directory_uri() . '/js/theme-customizer.js', array( 'customize-preview' ), '20120827', true );
-}
-add_action( 'customize_preview_init', 'twentytwelve_customize_preview_js' );
-
-

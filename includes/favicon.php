@@ -1,6 +1,8 @@
 <?php
 namespace Snippet;
 
+// Favicon
+
 class Favicon {
     public function __construct() {
         add_action('wp_head', array($this, 'render_favicon'));
