@@ -1,6 +1,6 @@
 # Zesty
 
-This is the WordPress base theme Zesty. Zesty is a powerful, yet simple, WordPress base theme with a responsive, mobile-first grid design. What that means is Zesty is a collection of best practices and patterns for maintainable, responsive WordPress themes. Since we base all of our projects on Zesty, we hope to share it with colleagues and friends so they may also benefit.
+This is the WordPress base theme Zesty. Zesty is a powerful, yet simple, WordPress base theme with a responsive, mobile-first grid design. What that means is Zesty is a collection of best practices and patterns for maintainable, responsive WordPress themes.
 
 You can use the child theme Zestful as a starting point for your new projects:
 https://github.com/cmwelsh/zestful
