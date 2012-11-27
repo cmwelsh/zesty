@@ -3,11 +3,25 @@
 class Zesty {
     protected static $snippets = array();
 
-    public static function enqueue_script($slug, $path) {
-        $stylesheet_directory_url = get_stylesheet_directory_uri();
-        $script_url = "{$stylesheet_directory_url} /assets/scripts/{$path}.js";
-        wp_enqueue_script($slug, $script_url);
+    public static function asset_url($file = '') {
+        $base_url = get_stylesheet_directory_uri() . '/assets';
+        if ($file === null) {
+            return $base_url;
+        }
+        else {
+            return $base_url . '/' . $file;
+        }
     }
+
+    public static function enqueue_script($slug, $path) {
+        $url = static::asset_url("js/{$path}");
+        wp_enqueue_script($slug, $url);
+    }
+    public static function enqueue_style($slug, $path) {
+        $url = static::asset_url("css/{$path}");
+        wp_enqueue_style($slug, $url);
+    }
+
     public static function load_snippet($slug, $options = array()) {
         // Check if file exists
         $required = !isset($options['optional']) or !$options['optional'];
@@ -29,6 +43,7 @@ class Zesty {
     public static function snippet($slug) {
         return self::$snippets[$slug];
     }
+
     public static function query($options = null) {
         $query = new Zesty_Query_Iterator($options);
         return $query;

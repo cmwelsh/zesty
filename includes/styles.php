@@ -1,7 +1,10 @@
 <?php
 namespace Snippet;
 
+use Zesty;
+
 // Enqueue stylesheets
+// Copy this file into your child theme to add or edit styles
 
 class Styles {
     public function __construct() {
@@ -10,7 +13,6 @@ class Styles {
 
     // Load default stylesheet
     public function wp_enqueue_scripts() {
-        $path = get_stylesheet_directory_uri() . '/assets/styles/';
-        wp_enqueue_style('zesty-style', $path . 'style.css');
+        Zesty::enqueue_style('zesty-style', 'style.css');
     }
 }
