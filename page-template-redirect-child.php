@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Redirect to Child Page
+Template Name: Redirect: First Child Page
 */
 
 $query = new WP_Query(array(
