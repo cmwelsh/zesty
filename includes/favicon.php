@@ -1,6 +1,8 @@
 <?php
 namespace Snippet;
 
+use Zesty;
+
 // Favicon
 
 class Favicon {
@@ -10,7 +12,7 @@ class Favicon {
     }
     public function render_favicon() {
         ?>
-        <link rel="shortcut icon" href="<?= get_stylesheet_directory_uri() ?>/assets/images/favicon.png">
+        <link rel="shortcut icon" href="<?= Zesty::asset_url('img/favicon.png') ?>">
         <?php
     }
 }
