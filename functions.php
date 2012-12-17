@@ -8,7 +8,6 @@ if (function_exists('register_field')) {
 function zesty_base_init() {
 	// Load built-in parent snippets
 	Zesty::load_snippet('custom-header');
-	Zesty::load_snippet('facebook-open-graph');
 	Zesty::load_snippet('remove-meta-tags');
 	Zesty::load_snippet('favicon');
 	Zesty::load_snippet('remove-menu-items');
