@@ -59,7 +59,7 @@ class Zesty_Post_Iterator implements Iterator {
     protected $original_post;
 
     public function __construct($posts) {
-        $this->original_post = $GLOBALS['post'];
+        $this->original_post = isset($GLOBALS['post']) ? $GLOBALS['post'] : null;
         $this->posts = $posts;
     }
 
@@ -78,31 +78,33 @@ class Zesty_Post_Iterator implements Iterator {
         setup_postdata($current_post);
         return $current_post;
     }
-    
+
     function key() {
         return $this->index;
     }
-    
+
     function next() {
         $this->index++;
         $valid = isset($this->posts[$this->key()]);     
     }
-    
+
     function valid() {
         $valid = isset($this->posts[$this->key()]);
         if (!$valid) {
             // reset post data
-            $GLOBALS['post'] = $this->original_post;
-            setup_postdata($this->original_post);
+            if ($this->original_post !== null) {
+                $GLOBALS['post'] = $this->original_post;
+                setup_postdata($this->original_post);
+            }
         }
-            
+
         return $valid;
     }
 }
 
 class Zesty_Query_Iterator extends Zesty_Post_Iterator implements Countable {
     protected $query;
-    
+
     public function __construct($query_arguments = null) {
         if ($query_arguments === null) {
             $this->query = $GLOBALS['wp_query'];
@@ -123,7 +125,7 @@ class Zesty_Query_Iterator extends Zesty_Post_Iterator implements Countable {
             return call_user_func_array(array($this->query, $method), $arguments);
         }
     }
-    
+
     public function __get($property) {
         if (isset($this->query->$property)) {
             return $this->query->$property;
